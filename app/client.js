@@ -15,7 +15,7 @@ async function main() {
   const program = new anchor.Program(idl, programId);
 
   // Execute the RPC.
-  await program.rpc.initialize();
+  await program.rpc.createRaffle('hi');
   // #endregion main
 }
 

@@ -8,12 +8,12 @@ mod lotto {
     use super::*;
     // Only the 'centralized' owner can create, trigger payouts
     // Set the creator here
-    pub fn create_raffle(ctx: Context<CreateRaffle>, authority: Pubkey) -> ProgramResult {
+    pub fn create_raffle(ctx: Context<CreateRaffle>) -> ProgramResult {
         let raffle_acct = &mut ctx.accounts.raffle;
         raffle_acct.starting_tickets = 10;
         raffle_acct.tickets_left = 10;
         raffle_acct.ticket_price = 1;
-        raffle_acct.authority = authority;
+        msg!(&raffle_acct.key().to_string());
         Ok(())
     }
 
@@ -23,10 +23,6 @@ mod lotto {
 
     //// Participant functions
     //pub fn buy_ticket(ctx: Context<Initialize>) -> ProgramResult {
-        //Ok(())
-    //}
-
-    //pub fn get_raffle_stats(ctx: Context<Initialize>) -> ProgramResult {
         //Ok(())
     //}
 }

@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::system_program;
 
 declare_id!("283J3ppWdCmM9FoYv95x6q9EsDa1RXCfG8xQXE3ccfMG");
 
@@ -35,10 +34,9 @@ mod lotto {
 pub struct CreateRaffle<'info> {
     #[account(init, payer = authority, space = 24 + 24)]
     pub raffle: Account<'info, Raffle>,
-    #[account(signer)]
-    pub authority: AccountInfo<'info>,
-    #[account(address = system_program::ID)]
-    pub system_program: AccountInfo<'info>,
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    pub system_program: Program<'info, System>,
 }
 
 //#[account]

@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::system_program;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("283J3ppWdCmM9FoYv95x6q9EsDa1RXCfG8xQXE3ccfMG");
 
 #[program]
 mod lotto {
@@ -33,7 +33,7 @@ mod lotto {
 
 #[derive(Accounts)]
 pub struct CreateRaffle<'info> {
-    #[account(init, payer = authority, space = 24 + 40)]
+    #[account(init, payer = authority, space = 24 + 24)]
     pub raffle: Account<'info, Raffle>,
     #[account(signer)]
     pub authority: AccountInfo<'info>,
@@ -52,7 +52,6 @@ pub struct Raffle {
     pub starting_tickets: u64,
     pub tickets_left: u64,
     pub ticket_price: u64,
-    pub authority: Pubkey,
 }
 
 

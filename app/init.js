@@ -15,20 +15,23 @@ async function main() {
   // Generate the program client from IDL.
   const program = new anchor.Program(idl, programId);
 
-  const raffleAcct = anchor.web3.Keypair.generate();
   const payer = await getPayer();
-    console.log(payer.publicKey)
+
+  // Consistent generation of raffle key
+  // TODO: make this a pda
+  const raffleAcct = anchor.web3.Keypair.fromSeed(payer.publicKey.toBytes())
+  console.log(raffleAcct.publicKey);
 
   // Execute the RPC.
   await program.rpc.createRaffle({
       accounts: {
           raffle: raffleAcct.publicKey,
           authority: payer.publicKey,
-          systemProgram: anchor.web3.SystemProgram.programId,
+          systemProgram: anchor.web3.SystemProgram.programId, // I have no idea why this is not the programId variable
       },
-      signers: [raffleAcct, payer] // TODO: the payer?],
+      signers: [raffleAcct, payer] // TODO: do we need the payer here?,
   });
-  
+
   console.log("created raffle account")
 
   const fetchedRaffleAcct = await program.account.raffle.fetch(

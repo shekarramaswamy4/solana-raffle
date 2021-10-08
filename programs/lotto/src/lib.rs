@@ -12,7 +12,6 @@ mod lotto {
         raffle_acct.starting_tickets = 10;
         raffle_acct.tickets_left = 10;
         raffle_acct.ticket_price = 1;
-        msg!(&raffle_acct.key().to_string());
         Ok(())
     }
 
@@ -21,9 +20,12 @@ mod lotto {
     //}
 
     //// Participant functions
-    //pub fn buy_ticket(ctx: Context<Initialize>) -> ProgramResult {
-        //Ok(())
-    //}
+    pub fn create_participant(ctx: Context<CreateParticipant>, authority: Pubkey) -> ProgramResult {
+        let raffle_participant = &mut ctx.accounts.raffle_participant;
+        raffle_participant.num_tickets = 0;
+        raffle_participant.authority = authority;
+        Ok(())
+    }
 }
 
 // Authorized user creates raffle
@@ -32,18 +34,31 @@ mod lotto {
 
 #[derive(Accounts)]
 pub struct CreateRaffle<'info> {
-    #[account(init, payer = authority, space = 24 + 24)]
+    #[account(init, payer = authority, space = 24 + 24)] // TODO: need the extra 24?
     pub raffle: Account<'info, Raffle>,
     #[account(mut)]
     pub authority: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
-//#[account]
-//pub struct RaffleParticipant {
-    //pub num_tickets: u64,
-    //pub authority: Pubkey,
+#[derive(Accounts)]
+pub struct CreateParticipant<'info> {
+    #[account(init, payer = authority, space = 8 + 40)]
+    pub raffle_participant: Account<'info, RaffleParticipant>,
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+//#[derive(Accounts)]
+//pub struct BuyTicket<'info> {
 //}
+
+#[account]
+pub struct RaffleParticipant {
+    pub num_tickets: u64,
+    pub authority: Pubkey,
+}
 
 #[account]
 pub struct Raffle {

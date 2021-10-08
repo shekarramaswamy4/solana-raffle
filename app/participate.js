@@ -46,7 +46,7 @@ async function main() {
   }
 
   console.log(participantAcct.publicKey);
-  console.log(fetchedParticipantAcct.num_tickets);
+  console.log(fetchedParticipantAcct.numTickets);
   // #endregion main
 }
 

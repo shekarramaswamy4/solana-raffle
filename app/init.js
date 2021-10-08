@@ -18,25 +18,34 @@ async function main() {
   const payer = await getPayer();
 
   // Consistent generation of raffle key
-  // TODO: make this a pda
-  const raffleAcct = anchor.web3.Keypair.fromSeed(payer.publicKey.toBytes())
+  const arr = [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+  const raffleAcct = anchor.web3.Keypair.fromSeed(Uint8Array.from(arr))
+
+  let fetchedRaffleAcct;
+  try {
+    fetchedRaffleAcct = await program.account.raffle.fetch(
+        raffleAcct.publicKey
+    );
+    console.log("raffle already exists")
+  } catch (err) {
+    console.log("creating raffle acct")
+    // Execute the RPC.
+    await program.rpc.createRaffle({
+        accounts: {
+            raffle: raffleAcct.publicKey,
+            authority: payer.publicKey,
+            systemProgram: anchor.web3.SystemProgram.programId, // I have no idea why this is not the programId variable
+        },
+        signers: [raffleAcct, payer] // TODO: do we need the payer here?,
+    });
+
+    console.log("created raffle account")
+    fetchedRaffleAcct = await program.account.raffle.fetch(
+      raffleAcct.publicKey
+    );
+  }
+
   console.log(raffleAcct.publicKey);
-
-  // Execute the RPC.
-  await program.rpc.createRaffle({
-      accounts: {
-          raffle: raffleAcct.publicKey,
-          authority: payer.publicKey,
-          systemProgram: anchor.web3.SystemProgram.programId, // I have no idea why this is not the programId variable
-      },
-      signers: [raffleAcct, payer] // TODO: do we need the payer here?,
-  });
-
-  console.log("created raffle account")
-
-  const fetchedRaffleAcct = await program.account.raffle.fetch(
-    raffleAcct.publicKey
-  );
   console.log(fetchedRaffleAcct.ticketPrice);
   // #endregion main
 }

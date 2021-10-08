@@ -30,19 +30,18 @@ async function main() {
     console.log("creating participant acct")
     console.log(participantAcct.publicKey);
     // Execute the RPC.
-    await program.rpc.createParticipant({
+    await program.rpc.createParticipant(payer.publicKey, {
         accounts: {
             raffleParticipant: participantAcct.publicKey,
             authority: payer.publicKey,
             systemProgram: anchor.web3.SystemProgram.programId, // I have no idea why this is not the programId variable
         },
         signers: [participantAcct, payer],
-        authority: payer.publicKey,
     });
 
     console.log("created participant account")
     fetchedParticipantAcct = await program.account.raffleParticipant.fetch(
-      raffleAcct.publicKey
+      fetchedParticipantAcct.publicKey
     );
   }
 

@@ -26,6 +26,11 @@ mod lotto {
         raffle_participant.authority = authority;
         Ok(())
     }
+
+    pub fn buy_ticket(ctx: Context<BuyTicket>) -> ProgramResult {
+        let raffle_acct = &mut ctx.accounts.raffle;
+        Ok(())
+    }
 }
 
 // Authorized user creates raffle
@@ -50,6 +55,15 @@ pub struct CreateParticipant<'info> {
     pub system_program: Program<'info, System>,
 }
 
+#[derive(Accounts)]
+pub struct BuyTicket<'info> {
+    #[account(mut)]
+    pub raffle: Account<'info, Raffle>,
+    #[account(mut, has_one = authority)]
+    pub participant: Account<'info, RaffleParticipant>,
+    pub authority: Signer<'info>,
+}
+
 //#[derive(Accounts)]
 //pub struct BuyTicket<'info> {
 //}
@@ -65,6 +79,12 @@ pub struct Raffle {
     pub starting_tickets: u64,
     pub tickets_left: u64,
     pub ticket_price: u64,
+}
+
+#[error]
+pub enum ErrorCode {
+    #[msg("There are no more tickets left to buy for this raffle!")]
+    NoMoreTickets,
 }
 
 

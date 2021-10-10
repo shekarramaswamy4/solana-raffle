@@ -41,7 +41,7 @@ async function main() {
 
     console.log("created participant account")
     fetchedParticipantAcct = await program.account.raffleParticipant.fetch(
-      fetchedParticipantAcct.publicKey
+      participantAcct.publicKey
     );
   }
 

@@ -19,10 +19,7 @@ async function main() {
 
   // Consistent generation of raffle key
   const arr = [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-  //const raffleAcct = anchor.web3.Keypair.fromSeed(Uint8Array.from(arr))
-
-  const raffleAcct = anchor.web3.Keypair.generate()
-
+  const raffleAcct = anchor.web3.Keypair.fromSeed(Uint8Array.from(arr))
 
   let fetchedRaffleAcct;
   try {

@@ -20,9 +20,8 @@ async function main() {
   // Consistent generation of participant key
   const participantAcct = anchor.web3.Keypair.fromSeed(payer.publicKey.toBytes())
 
-  let fetchedParticipantAcct;
   try {
-    fetchedParticipantAcct = await program.account.raffleParticipant.fetch(
+    await program.account.raffleParticipant.fetch(
         participantAcct.publicKey
     );
     console.log("participant already exists")
@@ -40,13 +39,34 @@ async function main() {
     });
 
     console.log("created participant account")
-    fetchedParticipantAcct = await program.account.raffleParticipant.fetch(
-      participantAcct.publicKey
-    );
   }
 
-  console.log(participantAcct.publicKey);
-  console.log(fetchedParticipantAcct.numTickets);
+  try {
+    const arr = [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    const raffleAcct = anchor.web3.Keypair.fromSeed(Uint8Array.from(arr))
+
+    await program.rpc.buyTicket({
+        accounts: {
+            raffle: raffleAcct.publicKey,
+            participant: participantAcct.publicKey,
+        },
+        signers: [],
+    });
+  } catch (err) {
+      console.log("Error buying ticket")
+      console.log(err);
+      return
+  }
+
+  try {
+    const fetchedParticipant = await program.account.raffleParticipant.fetch(
+        participantAcct.publicKey
+    );
+    console.log(fetchedParticipant.numTickets)
+  } catch (err) {
+      console.log("Error fetching participant");
+  }
+
   // #endregion main
 }
 

@@ -61,9 +61,8 @@ pub struct CreateParticipant<'info> {
 pub struct BuyTicket<'info> {
     #[account(mut)]
     pub raffle: Account<'info, Raffle>,
-    #[account(mut, has_one = authority)]
+    #[account(mut)]
     pub participant: Account<'info, RaffleParticipant>,
-    pub authority: Signer<'info>,
 }
 
 #[account]

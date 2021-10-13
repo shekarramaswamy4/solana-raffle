@@ -49,8 +49,9 @@ async function main() {
         accounts: {
             raffle: raffleAcct.publicKey,
             participant: participantAcct.publicKey,
+            authority: payer.publicKey,
         },
-        signers: [],
+        signers: [payer],
     });
   } catch (err) {
       console.log("Error buying ticket")
